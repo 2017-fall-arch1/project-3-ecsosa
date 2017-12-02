@@ -36,13 +36,13 @@ Layer layer4 = {
 };
   
 
-Layer layer3 = {		/**< Layer with an orange circle */
-  (AbShape *)&circle8,
-  {(screenWidth/2)+10, (screenHeight/2)+5}, /**< bit below & right of center */
-  {0,0}, {0,0},				    /* last & next pos */
-  COLOR_VIOLET,
-  &layer4,
-};
+//Layer layer3 = {		/**< Layer with an orange circle */
+//  (AbShape *)&circle8,
+//  {(screenWidth/2)+10, (screenHeight/2)+5}, /**< bit below & right of center */
+//  {0,0}, {0,0},				    /* last & next pos */
+//  COLOR_VIOLET,
+//  &layer4,
+//};
 
 
 Layer fieldLayer = {		/* playing field as a layer */
@@ -50,7 +50,7 @@ Layer fieldLayer = {		/* playing field as a layer */
   {screenWidth/2, screenHeight/2},/**< center */
   {0,0}, {0,0},				    /* last & next pos */
   COLOR_BLACK,
-  &layer3
+  &layer4
 };
 
 Layer layer1 = {		/**< Layer with a red square */
@@ -80,9 +80,9 @@ typedef struct MovLayer_s {
 } MovLayer;
 
 /* initial value of {0,0} will be overwritten */
-MovLayer ml3 = { &layer3, {1,1}, 0 }; /**< not all layers move */
+//MovLayer ml3 = { &layer3, {1,1}, 0 }; /**< not all layers move */
 //MovLayer ml1 = { &layer1, {1,2}, &ml3 }; 
-MovLayer ml0 = { &layer0, {2,1}, &ml3 }; 
+MovLayer ml0 = { &layer0, {2,1}, 0 }; 
 
 void movLayerDraw(MovLayer *movLayers, Layer *layers)
 {
@@ -167,14 +167,29 @@ void main()
   configureClocks();
   lcd_init();
   shapeInit();
-  p2sw_init(1);
-
+  p2sw_init(15);
+ 
   shapeInit();
 
   layerInit(&layer0);
   layerDraw(&layer0);
 
+  //
+  or_sr(0x8);
+ drawString5x7(10,10, "switches:", COLOR_BLACK, COLOR_BLUE);
+  while (1) {
+    u_int switches = p2sw_read(), i;
+    char str[5];
+    for (i = 0; i < 4; i++)
+      str[i] = (switches & (1<<i)) ? '-' : '0'+i;
+    str[4] = 0;
+    drawString5x7(20,20, str, COLOR_BLACK, COLOR_BLUE);
+  }
 
+  //
+
+
+  
   layerGetBounds(&fieldLayer, &fieldFence);
 
 

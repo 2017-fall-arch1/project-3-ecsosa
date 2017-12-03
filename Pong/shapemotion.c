@@ -19,8 +19,8 @@
 #define GREEN_LED BIT6
 
 
-AbRect rect10 = {abRectGetBounds, abRectCheck, {10,10}}; /**< 10x10 rectangle */
-AbRArrow rightArrow = {abRArrowGetBounds, abRArrowCheck, 30};
+AbRect rect10 = {abRectGetBounds, abRectCheck, {15,5}}; /**< 10x10 rectangle */
+//AbRArrow rightArrow = {abRArrowGetBounds, abRArrowCheck, 30};
 
 AbRectOutline fieldOutline = {	/* playing field */
   abRectOutlineGetBounds, abRectOutlineCheck,   
@@ -29,7 +29,7 @@ AbRectOutline fieldOutline = {	/* playing field */
 
 Layer layer4 = {
   (AbShape *)&rect10,
-  {(screenWidth/2), (screenHeight/2)-60}, /**< bit below & right of center */
+  {(screenWidth/2), (screenHeight/2)-65}, /**< bit below & right of center */
   {0,0}, {0,0},				    /* last & next pos */
   COLOR_PINK,
   0
@@ -55,7 +55,7 @@ Layer fieldLayer = {		/* playing field as a layer */
 
 Layer layer1 = {		/**< Layer with a red square */
   (AbShape *)&rect10,
-  {screenWidth/2, (screenHeight/2)+60}, /**< center */
+  {screenWidth/2, (screenHeight/2)+65}, /**< center */
   {0,0}, {0,0},				    /* last & next pos */
   COLOR_RED,
   &fieldLayer,
@@ -174,21 +174,6 @@ void main()
   layerInit(&layer0);
   layerDraw(&layer0);
 
-  //
-  or_sr(0x8);
- drawString5x7(10,10, "switches:", COLOR_BLACK, COLOR_BLUE);
-  while (1) {
-    u_int switches = p2sw_read(), i;
-    char str[5];
-    for (i = 0; i < 4; i++)
-      str[i] = (switches & (1<<i)) ? '-' : '0'+i;
-    str[4] = 0;
-    drawString5x7(20,20, str, COLOR_BLACK, COLOR_BLUE);
-  }
-
-  //
-
-
   
   layerGetBounds(&fieldLayer, &fieldFence);
 
@@ -205,6 +190,20 @@ void main()
     P1OUT |= GREEN_LED;       /**< Green led on when CPU on */
     redrawScreen = 0;
     movLayerDraw(&ml0, &layer0);
+
+    //
+    // or_sr(0x8);
+ drawString5x7(10,10, "switches:", COLOR_BLACK, COLOR_BLUE);
+  while (1) {
+    u_int switches = p2sw_read(), i;
+    char str[5];
+    for (i = 0; i < 4; i++)
+      str[i] = (switches & (1<<i)) ? '-' : '0'+i;
+    str[4] = 0;
+    drawString5x7(20,20, str, COLOR_BLACK, COLOR_BLUE);
+  }
+  //
+    
   }
 }
 

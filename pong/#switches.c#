@@ -1,0 +1,58 @@
+
+
+#include <msp430.h>
+#include "switches.h"
+#include "buzzer.h"
+#include "buzzer.c"
+//#include "libTimer.h"
+char switch_state_down, switch_state_changed; //effectively boolean
+
+static char
+switch_update_interrupt_sense()
+{
+  char p1val = P2IN;
+  /* update switch interrupt to detect changes from current buttons */
+  P1IES |= (p1val & SWITCHES);	/* if switch up, sense down */
+  P1IES &= (p1val | ~SWITCHES);	/* if switch down, sense up */
+  return p1val;
+}
+
+void 
+switch_init()			/* setup switch */
+{  
+  P2REN |= SWITCHES;		/* enables resistors for switches */
+  P2IE = SWITCHES;		/* enable interrupts from switches */
+  P2OUT |= SWITCHES;		/* pull-ups for switches */
+  P2DIR &= ~SWITCHES;		/* set switches' bits for input */
+  switch_update_interrupt_sense();
+  switch_interrupt_handler();	/* to initially read the switches */
+}
+
+void
+switch_interrupt_handler()
+{
+
+  char p1val = switch_update_interrupt_sense();
+
+  if(!(SW1 & p1val)){
+  switch_state_down = 1; /* 0 when SW1 is up */
+  switch_state_changed = 1;
+  buzzer_init(900, 900);
+  }
+  else if(!(SW2&p1val)){
+  switch_state_down = 1; /* 0 when SW1 is up */
+  switch_state_changed = 1;
+  buzzer_init(800, 600);
+  }
+  else if(!(SW3&p1val)){
+  switch_state_down = 1; /* 0 when SW1 is up */
+  switch_state_changed = 1;
+  buzzer_init(700, 300);
+  }
+  else if(!(SW4&p1val)){
+     switch_state_down = 1; /* 0 when SW1 is up */
+  switch_state_changed = 1;
+  buzzer_init(600, 100);
+  }
+}
+

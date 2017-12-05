@@ -1,3 +1,4 @@
+
 /** \file shapemotion.c
  *  \brief This is a simple shape motion demo.
  *  This demo creates two layers containing shapes.
@@ -25,7 +26,7 @@ u_char player2Score = '0';
 static int state = 0;
 
 
-AbRect rect10 = {abRectGetBounds, abRectCheck, {15,2}}; /**< 10x10 rectangle */
+AbRect rect10 = {abRectGetBounds, abRectCheck, {2,15}}; /**< 10x10 rectangle */
 //AbRArrow rightArrow = {abRArrowGetBounds, abRArrowCheck, 30};
 
 AbRectOutline fieldOutline = {	/* playing field */
@@ -33,38 +34,28 @@ AbRectOutline fieldOutline = {	/* playing field */
   {screenWidth/2 - 10, screenHeight/2 - 10}
 };
 
-Layer layer4 = {
-  (AbShape *)&rect10,
-  {(screenWidth/2), (screenHeight/2)-68}, /**< bit below & right of center */
-  {0,0}, {0,0},				    /* last & next pos */
-  COLOR_PINK,
-  0
-};
-  
-
-//Layer layer3 = {		/**< Layer with an orange circle */
-//  (AbShape *)&circle8,
-//  {(screenWidth/2)+10, (screenHeight/2)+5}, /**< bit below & right of center */
-//  {0,0}, {0,0},				    /* last & next pos */
-//  COLOR_VIOLET,
-//  &layer4,
-//};
-
-
 Layer fieldLayer = {		/* playing field as a layer */
   (AbShape *) &fieldOutline,
   {screenWidth/2, screenHeight/2},/**< center */
   {0,0}, {0,0},				    /* last & next pos */
   COLOR_BLACK,
-  &layer4
+  0
+};
+
+Layer layer4 = {
+  (AbShape *)&rect10,
+  {(screenWidth/2)-50, (screenHeight/2)}, /**< bit below & right of center */
+  {0,0}, {0,0},				    /* last & next pos */
+  COLOR_PINK,
+  &fieldLayer
 };
 
 Layer layer1 = {		/**< Layer with a red square */
   (AbShape *)&rect10,
-  {screenWidth/2, (screenHeight/2)+67}, /**< center */
+  {(screenWidth/2)+50, (screenHeight/2)}, /**< center */
   {0,0}, {0,0},				    /* last & next pos */
   COLOR_RED,
-  &fieldLayer,
+  &layer4,
 };
 
 Layer layer0 = {		/**< Layer with an orange circle */
@@ -165,7 +156,7 @@ void moveBall(MovLayer *ml, Region *fence1, MovLayer *ml2, MovLayer *ml3)
 	newPos.axes[1] = screenHeight/2;
 	player1Score = player1Score - 255;
       }
-      if(player1Score == '9' || player2Score == '9'){
+      if(player1Score == '3' || player2Score == '3'){
 	state = 1;
       }
     } /**< for axis */
@@ -289,69 +280,53 @@ void main()
   
   for(;;) {
     
-  u_int switches = p2sw_read(), i;
+  u_int switches = p2sw_read();
   char str[5];
     while (!redrawScreen) { /**< Pause CPU if screen doesn't need updating */
       P1OUT &= ~GREEN_LED;    /**< Green led off witHo CPU */
       or_sr(0x10);	      /**< CPU OFF */
-      for(i=0;i<4;i++){
+      //for(i=0;i<4;i++){
 	//str[i] = buzzer_init();
-        str[i] = (switches & (1<<i)) ? '-' : '0'+i;
+        //str[i] = (switches & (1<<i)) ? '-' : '0'+i;
 
 	  
 
 
       }
       //if(str[0]){ 
-      if(!(switches & (1<<0))){
-	drawString5x7(60,60, "o",COLOR_BLACK, COLOR_BLUE);
-	//buzzer_init();
-      }
-      if (!(switches & (1<<1))){
-	drawString5x7(60,60, "a",COLOR_BLACK, COLOR_BLUE);
-	//buzzer_init();
-      }
-      if (!(switches & (1<<2))){
-	drawString5x7(60,60, "l",COLOR_BLACK, COLOR_BLUE);
-	//buzzer_init();
-      }
-      if (!(switches & (1<<3))){
-	drawString5x7(60,60, "q",COLOR_BLACK, COLOR_BLUE);
-      }
+    // if(!(switches & (1<<0))){
+    //	drawString5x7(60,60, "o",COLOR_BLACK, COLOR_BLUE);
+    //	//buzzer_init();
+    //}
+    //if (!(switches & (1<<1))){
+    //	drawString5x7(60,60, "a",COLOR_BLACK, COLOR_BLUE);
+    //	//buzzer_init();
+    //}
+    //if (!(switches & (1<<2))){
+    //	drawString5x7(60,60, "l",COLOR_BLACK, COLOR_BLUE);
+    //	//buzzer_init();
+      //}
+    // if (!(switches & (1<<3))){
+    //	drawString5x7(60,60, "q",COLOR_BLACK, COLOR_BLUE);
+    //}
 
-      str[4] = 0;
+    //str[4] = 0;
     //buzzer_init();
-      drawString5x7(40,0, str,COLOR_BLACK, COLOR_BLUE);
+    //drawString5x7(40,0, str,COLOR_BLACK, COLOR_BLUE);
 
     
       
-    }
+    //}
     P1OUT |= GREEN_LED;       /**< Green led on when CPU on */
     redrawScreen = 0;
     movLayerDraw(&ml0, &layer0);
-
-
-
     movLayerDraw(&ml3, &layer0);
-
     movLayerDraw(&ml1, &layer0);
-
-    movLayerDraw(&ml0, &layer0);
 
     //board score and writting
 
-        drawChar5x7(5, 5, player1Score, COLOR_BLUE, COLOR_BLACK);
-
+    drawChar5x7(5, 5, player1Score, COLOR_BLUE, COLOR_BLACK);
     drawChar5x7(115, 5, player2Score, COLOR_BLUE, COLOR_BLACK);
-
-    //drawString5x7(5, 150, "Pong<3", COLOR_WHITE, COLOR_BLACK);
-
-    //drawString5x7(38, 5, "<3Points<3", COLOR_WHITE, COLOR_BLACK);
-    //
-    // or_sr(0x8);
-
-
- 
   }
 }
 
@@ -383,9 +358,9 @@ void wdt_c_handler()
     case 1:
       layerDraw(&layer1);
       if(player1Score > player2Score)
-	drawString5x7(4,80, "#1 WON #2 keep trying:P", COLOR_WHITE, COLOR_BLACK);
+	drawString5x7(4,80, "#1 WON", COLOR_WHITE, COLOR_BLACK);
       else if(player1Score < player2Score)
-	drawString5x7(4, 50, "#2 WON #1 try again:P", COLOR_WHITE, COLOR_BLACK);
+	drawString5x7(4, 50, "#2 WON", COLOR_WHITE, COLOR_BLACK);
       break;
     }
     if(switches & (1<<3)){
@@ -404,22 +379,6 @@ void wdt_c_handler()
     count = 0;
   }
   P1OUT &= ~GREEN_LED;
-
-  
-
-  
-  //if(switches && (1<<2)){
-  // buzzer_init();
-  //}
-  
-  //if(switches && (1<<1)){
-  // buzzer_init();
-  // }
-  
-  //if(switches && (1<<0)){
-  //buzzer_init();
-  //}
-
 }
 
 

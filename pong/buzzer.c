@@ -3,7 +3,7 @@
 #include "libTimer.h"
 #include "buzzer.h"
 
-void buzzer_init()
+void buzzer_init(short fr)
 {
     /* 
        Direct timer A output "TA0.1" to P2.6.  
@@ -18,7 +18,7 @@ void buzzer_init()
     P2SEL |= BIT6;
     P2DIR = BIT6;		/* enable output to speaker (P2.6) */
 
-    buzzer_set_period(1000);	/* start buzzing!!! */
+    buzzer_set_period(fr);	/* start buzzing!!! */
 }
 
 void buzzer_set_period(short cycles)

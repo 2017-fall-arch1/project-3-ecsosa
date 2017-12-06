@@ -2,7 +2,6 @@
 
 
 # Project 3: LCD Game
-## Introduction
 
 ## Libraries
 
@@ -28,20 +27,20 @@ and render shapes that move.
 
 Firstly I create the shapes I want to use for my pong game: two paddles, a ball and a board.
 
-The Mov Layer method simliar to the one provided by the professor creates alinked list of layer references. the velocity represents one iteration of changes.
+- The Mov Layer method simliar to the one provided by the professor creates alinked list of layer references. the velocity represents one iteration of changes.
 
-MovLayerDraw links the movLayer with layer like figures
+- MovLayerDraw links the movLayer with layer like figures
 
-Th moveBall method has a lot of functions but overall is the one in charge of making the layer ball move with the correct restrictions. If the ball is about to touch topLeft or bottomRight then the player will score a point that will be deisplayed on the screen and alsoit will start a new round where the ball will be placed at the center of the board. There is also a  buzzer that makes sounds when then there is a point scored. Also when the paddles move, it can be heared a buzz.
+-The moveBall method has a lot of functions but overall is the one in charge of making the layer ball move with the correct restrictions. If the ball is about to touch topLeft or bottomRight then the player will score a point that will be deisplayed on the screen and alsoit will start a new round where the ball will be placed at the center of the board. There is also a  buzzer that makes sounds when then there is a point scored. Also when the paddles move, it can be heared a buzz.
 
-moveDown & moveUp are methods that make the paddles move up and down, this is succeded by changing the direction of the paddles parm ml is the moving shape to be advanced and param fence is the region which will serve as boundary for ml.
+-moveDown & moveUp are methods that make the paddles move up and down, this is succeded by changing the direction of the paddles parm ml is the moving shape to be advanced and param fence is the region which will serve as boundary for ml.
 
 In the main all methods are implemented, the buzzer is getting called.
 
 in wdt_c_handler is where the ball is being moved.
 
 
-How to play:
+## How to play:
 
 Click the switches:
 s1&s2 belong to player 1 (the one with red paddle)

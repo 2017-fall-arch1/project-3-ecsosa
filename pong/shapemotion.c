@@ -171,7 +171,7 @@ void moveBall(MovLayer *ml, Region *fence1, MovLayer *ml2, MovLayer *ml3)
   } /**< for ml */
 }
 
-void moveDown(MovLayer *ml, Region *fence)
+void movePaddleDown(MovLayer *ml, Region *fence)
 {
 
   Vec2 newPos;
@@ -192,7 +192,7 @@ void moveDown(MovLayer *ml, Region *fence)
   } /**< for ml */
 }
 	  
-void moveUp(MovLayer *ml, Region *fence)
+void movePaddleUp(MovLayer *ml, Region *fence)
 {
   
   Vec2 newPos;
@@ -214,7 +214,7 @@ void moveUp(MovLayer *ml, Region *fence)
   }
 
 
-u_int bgColor = COLOR_BLUE;     /**< The background color */
+u_int bgColor = COLOR_WHITE;     /**< The background color */
 int redrawScreen = 1;           /**< Boolean for whether screen needs to be redrawn */
 
 Region fieldFence;		/**< fence around playing field  */
@@ -246,7 +246,7 @@ void main()
   or_sr(0x8);	              /**< GIE (enable interrupts) */
 
 
-  drawString5x7(0,0, "score:", COLOR_BLACK, COLOR_BLUE);
+  drawString5x7(0,0, "score:", COLOR_BLACK, COLOR_WHITE);
 
   for(;;) {
     
@@ -276,9 +276,9 @@ void main()
 
     //board score and writting
 
-    drawChar5x7(50, 0, score1 , COLOR_BLACK, COLOR_BLUE);
-    drawString5x7(60, 0, ":" , COLOR_BLACK, COLOR_BLUE);
-    drawChar5x7(70, 0, score2, COLOR_BLACK, COLOR_BLUE);
+    drawChar5x7(50, 0, score1 , COLOR_BLACK, COLOR_WHITE);
+    drawString5x7(60, 0, ":" , COLOR_BLACK, COLOR_WHITE);
+    drawChar5x7(70, 0, score2, COLOR_BLACK, COLOR_WHITE);
   }
 }
 
@@ -297,22 +297,22 @@ void wdt_c_handler()
     case 1:
       layerDraw(&layer0);
       if(score1 > score2)
-	drawString5x7(25,20, "player 1 won!!", COLOR_WHITE, COLOR_BLUE);
+	drawString5x7(25,20, "player 1 won!!", COLOR_BLACK, COLOR_WHITE);
       else if(score1 < score2)
-	drawString5x7(25, 60, "player 2 won!!", COLOR_WHITE, COLOR_BLUE);
+	drawString5x7(25, 60, "player 2 won!!", COLOR_BLACK, COLOR_WHITE);
       break;
     }
     if(switches & (1<<3)){
-      moveUp(&ml3, &fieldFence);
+      movePaddleUp(&ml3, &fieldFence);
     }
     if(switches & (1<<2)){
-      moveDown(&ml3, &fieldFence);
+      movePaddleDown(&ml3, &fieldFence);
     }
     if(switches & (1<<1)){
-      moveUp(&ml1, &fieldFence);
+      movePaddleUp(&ml1, &fieldFence);
     }
     if(switches & (1<<0)){
-      moveDown(&ml1, &fieldFence);
+      movePaddleDown(&ml1, &fieldFence);
     }
     redrawScreen = 1;
     count = 0;
